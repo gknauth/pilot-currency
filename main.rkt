@@ -1,4 +1,4 @@
-#lang racket/base
+#lang racket
 ;; pilot-currency/main.rkt
 ;; Copyright Geoffrey S. Knauth. See file "info.rkt".
 
@@ -351,7 +351,7 @@
 (define the-page
   `(html (head (title head-title)
                 (link ((rel "stylesheet")
-                       (href css-path)
+                       (href ,css-path)
                        (type "text/css")))
                 (body (div ((class "test"))
                            (h1 ,(string-append "Pilot Currency -- " pilot-name))
