@@ -354,7 +354,7 @@
                                 ,(td-flthrs adjusted-hours))))
 
 (define the-page
-  `(html (head (title head-title)
+  `(html (head (title ,head-title)
                 (link ((rel "stylesheet")
                        (href ,css-path)
                        (type "text/css")))
