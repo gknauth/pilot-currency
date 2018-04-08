@@ -13,11 +13,16 @@
 
 (define today (today->ymd8))
 
-(define con (mysql-connect #:server db-host
-                           #:database db-schema
-                           #:user db-user
-                           #:password db-passwd
-                           #:port db-port))
+(define db-source
+  (mysql-data-source #:server db-host #:port db-port
+                     #:user db-user #:password db-passwd
+                     #:database db-schema))
+
+(define (connect!)
+  (dsn-connect db-source))
+
+(define the-db
+  (virtual-connection (connection-pool connect!)))
 
 (define (first-answer con qstr)
   (let ((rows (query-rows con qstr)))
@@ -45,19 +50,19 @@
   "select sum(ifnull(inst_app,0)) from logbook")
 
 (define inst-app-last-30-days
-  (first-answer con qstr-inst-app-last-30-days))
+  (first-answer the-db qstr-inst-app-last-30-days))
 
 (define inst-app-last-90-days
-  (first-answer con qstr-inst-app-last-90-days))
+  (first-answer the-db qstr-inst-app-last-90-days))
 
 (define inst-app-last-180-days
-  (first-answer con qstr-inst-app-last-180-days))
+  (first-answer the-db qstr-inst-app-last-180-days))
 
 (define inst-app-last-365-days
-  (first-answer con qstr-inst-app-last-365-days))
+  (first-answer the-db qstr-inst-app-last-365-days))
 
 (define inst-app
-  (first-answer con qstr-inst-app))
+  (first-answer the-db qstr-inst-app))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Landings
@@ -78,19 +83,19 @@
   "select sum(ifnull(landings,0)) from logbook")
 
 (define landings-last-30-days
-  (first-answer con qstr-landings-last-30-days))
+  (first-answer the-db qstr-landings-last-30-days))
 
 (define landings-last-90-days
-  (first-answer con qstr-landings-last-90-days))
+  (first-answer the-db qstr-landings-last-90-days))
 
 (define landings-last-180-days
-  (first-answer con qstr-landings-last-180-days))
+  (first-answer the-db qstr-landings-last-180-days))
 
 (define landings-last-365-days
-  (first-answer con qstr-landings-last-365-days))
+  (first-answer the-db qstr-landings-last-365-days))
 
 (define landings
-  (first-answer con qstr-landings))
+  (first-answer the-db qstr-landings))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Night Landings
@@ -111,19 +116,19 @@
   "select sum(ifnull(nitelndgs,0)) from logbook")
 
 (define night-landings-last-30-days
-  (first-answer con qstr-night-landings-last-30-days))
+  (first-answer the-db qstr-night-landings-last-30-days))
 
 (define night-landings-last-90-days
-  (first-answer con qstr-night-landings-last-90-days))
+  (first-answer the-db qstr-night-landings-last-90-days))
 
 (define night-landings-last-180-days
-  (first-answer con qstr-night-landings-last-180-days))
+  (first-answer the-db qstr-night-landings-last-180-days))
 
 (define night-landings-last-365-days
-  (first-answer con qstr-night-landings-last-365-days))
+  (first-answer the-db qstr-night-landings-last-365-days))
 
 (define night-landings
-  (first-answer con qstr-night-landings))
+  (first-answer the-db qstr-night-landings))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Instrument Actual
@@ -147,22 +152,22 @@
   "select sum(ifnull(act_inst, 0)) from logbook where act_inst > 0 and ifnull(pic, 0) > ifnull(act_inst, 0)")
 
 (define inst-act
-  (first-answer con qstr-inst-act))
+  (first-answer the-db qstr-inst-act))
 
 (define inst-act-last-30-days
-  (first-answer con qstr-inst-act-last-30-days))
+  (first-answer the-db qstr-inst-act-last-30-days))
 
 (define inst-act-last-90-days
-  (first-answer con qstr-inst-act-last-90-days))
+  (first-answer the-db qstr-inst-act-last-90-days))
 
 (define inst-act-last-365-days
-  (first-answer con qstr-inst-act-last-365-days))
+  (first-answer the-db qstr-inst-act-last-365-days))
 
 (define inst-act-last-180-days
-  (first-answer con qstr-inst-act-last-180-days))
+  (first-answer the-db qstr-inst-act-last-180-days))
 
 (define inst-act-pic
-  (first-answer con qstr-inst-act-pic))
+  (first-answer the-db qstr-inst-act-pic))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Instrument Simulated
@@ -183,19 +188,19 @@
   "select sum(sim_inst) from logbook")
 
 (define inst-sim-last-30-days
-  (first-answer con qstr-inst-sim-last-30-days))
+  (first-answer the-db qstr-inst-sim-last-30-days))
 
 (define inst-sim-last-90-days
-  (first-answer con qstr-inst-sim-last-90-days))
+  (first-answer the-db qstr-inst-sim-last-90-days))
 
 (define inst-sim-last-180-days
-  (first-answer con qstr-inst-sim-last-180-days))
+  (first-answer the-db qstr-inst-sim-last-180-days))
 
 (define inst-sim-last-365-days
-  (first-answer con qstr-inst-sim-last-365-days))
+  (first-answer the-db qstr-inst-sim-last-365-days))
 
 (define inst-sim
-  (first-answer con qstr-inst-sim))
+  (first-answer the-db qstr-inst-sim))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Hours
@@ -216,19 +221,19 @@
   "select sum(ifnull(duration,0)) from logbook")
 
 (define hours-last-30-days
-  (first-answer con qstr-hours-last-30-days))
+  (first-answer the-db qstr-hours-last-30-days))
 
 (define hours-last-90-days
-  (first-answer con qstr-hours-last-90-days))
+  (first-answer the-db qstr-hours-last-90-days))
 
 (define hours-last-180-days
-  (first-answer con qstr-hours-last-180-days))
+  (first-answer the-db qstr-hours-last-180-days))
 
 (define hours-last-365-days
-  (first-answer con qstr-hours-last-365-days))
+  (first-answer the-db qstr-hours-last-365-days))
 
 (define hours
-  (first-answer con qstr-hours))
+  (first-answer the-db qstr-hours))
 
 (define adjusted-hours (+ hours 20)) ; add glider hours in different logbook
 
@@ -272,7 +277,7 @@
   (list 'td `((class ,class)) s))
 
 (define (get-date-count-remarks query currency-days-going-back)
-  (let ([rows (query-rows con query)]
+  (let ([rows (query-rows the-db query)]
         [today10 (ymd8->ymd10 today)])
     (map (λ (row)
            (list (ymd10-d1-within-days-following-d0? (sql-date->ymd10 (vector-ref row 0))
