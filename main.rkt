@@ -25,8 +25,9 @@
   (virtual-connection (connection-pool connect!)))
 
 (define (first-answer con qstr)
-  (let ((rows (query-rows con qstr)))
-    (vector-ref (first rows) 0)))
+  (let* ([rows (query-rows con qstr)]
+         [x (vector-ref (first rows) 0)])
+    (if (sql-null? x) 0 x)))
 
 (define computer-generated
   (string-append "computer generated as of " (ymd8->ymd10 today)))
@@ -256,7 +257,7 @@
 (define qstr-cap-read-mission-participation
   "select id, bkpgln, date, msym, mission_num, sortie, cap_ac, role from mission_participation order by bkpgln")
 
-(struct caplog (id bkpgln date msym msn snum ac role) #:transparent)
+(struct cap-participation (id bkpgln date msym msn snum ac role) #:transparent)
 
 (define qstr-cap-read-logbook
   "select bkpgln, date, ifnull(nav,0) as 'nav', ifnull(duration,0) as 'dur', remarks from logbook order by bkpgln")
@@ -284,7 +285,7 @@
 (define (td-int n)
   (list 'td '((class "int")) (number->string (if (sql-null? n) 0 n))))
 
-
+(define (td-int-threshhold n threshhold)
   (list 'td `((class ,(if (< n threshhold) "redint" "greenint"))) (number->string n)))
 
 (define (td-class-n class n decimals)
