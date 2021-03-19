@@ -14,9 +14,12 @@
 (define today (today->ymd8))
 
 (define db-source
-  (mysql-data-source #:server db-host #:port db-port
-                     #:user db-user #:password db-passwd
-                     #:database db-schema))
+  ((cond [(eq? db-engine 'mysql) mysql-data-source]
+         [(eq? db-engine 'postgres) postgresql-data-source]
+         [else (error "invalid db-engine")])
+   #:server db-host #:port db-port
+   #:user db-user #:password db-passwd
+   #:database db-schema))
 
 (define (connect!)
   (dsn-connect db-source))
@@ -32,23 +35,37 @@
 (define computer-generated
   (string-append "computer generated as of " (ymd8->ymd10 today)))
 
+(define isnull
+  (cond [(eq? db-engine 'mysql) "ifnull"]
+        [(eq? db-engine 'postgres) "coalesce"]
+        [else (error "invalid db-engine")]))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Instrument Approaches
 
+(define (date-within-last-n-days date n)
+  (cond [(eq? db-engine 'mysql)
+         (format "to_days(~a) >= to_days(now()) - ~a"
+                 date (number->string n))]
+        [(eq? db-engine 'postgres)
+         (format "age(current_timestamp, ~a) <= cast('~a days' as interval)"
+                 date (number->string n))]
+        [else (error "invalid db-engine")]))
+
 (define qstr-inst-app-last-30-days
-  "select sum(ifnull(inst_app,0)) from logbook where to_days(logbook.date) >= to_days(now()) - 30")
+  (string-append "select sum(" isnull "(inst_app,0)) from logbook where " (date-within-last-n-days "logbook.date" 30)))
 
 (define qstr-inst-app-last-90-days
-  "select sum(ifnull(inst_app,0)) from logbook where to_days(logbook.date) >= to_days(now()) - 90")
+  (string-append "select sum(" isnull "(inst_app,0)) from logbook where " (date-within-last-n-days "logbook.date" 90)))
 
 (define qstr-inst-app-last-180-days
-  "select sum(ifnull(inst_app,0)) from logbook where to_days(logbook.date) >= to_days(now()) - 180")
+  (string-append "select sum(" isnull "(inst_app,0)) from logbook where " (date-within-last-n-days "logbook.date" 180)))
 
 (define qstr-inst-app-last-365-days
-  "select sum(ifnull(inst_app,0)) from logbook where to_days(logbook.date) >= to_days(now()) - 365")
+  (string-append "select sum(" isnull "(inst_app,0)) from logbook where " (date-within-last-n-days "logbook.date" 365)))
 
 (define qstr-inst-app
-  "select sum(ifnull(inst_app,0)) from logbook")
+  (string-append "select sum(" isnull "(inst_app,0)) from logbook"))
 
 (define inst-app-last-30-days
   (first-answer the-db qstr-inst-app-last-30-days))
@@ -69,19 +86,19 @@
 ;; Landings
 
 (define qstr-landings-last-30-days
-  "select sum(ifnull(landings,0)) from logbook where to_days(logbook.date) >= to_days(now()) - 30")
+  (string-append "select sum(" isnull "(landings,0)) from logbook where " (date-within-last-n-days "logbook.date" 30)))
 
 (define qstr-landings-last-90-days
-  "select sum(ifnull(landings,0)) from logbook where to_days(logbook.date) >= to_days(now()) - 90")
+  (string-append "select sum(" isnull "(landings,0)) from logbook where " (date-within-last-n-days "logbook.date" 90)))
 
 (define qstr-landings-last-180-days
-  "select sum(ifnull(landings,0)) from logbook where to_days(logbook.date) >= to_days(now()) - 180")
+  (string-append "select sum(" isnull "(landings,0)) from logbook where " (date-within-last-n-days "logbook.date" 180)))
 
 (define qstr-landings-last-365-days
-  "select sum(ifnull(landings,0)) from logbook where to_days(logbook.date) >= to_days(now()) - 365")
+  (string-append "select sum(" isnull "(landings,0)) from logbook where " (date-within-last-n-days "logbook.date" 365)))
 
 (define qstr-landings
-  "select sum(ifnull(landings,0)) from logbook")
+  (string-append "select sum(" isnull "(landings,0)) from logbook"))
 
 (define landings-last-30-days
   (first-answer the-db qstr-landings-last-30-days))
@@ -102,19 +119,19 @@
 ;; Night Landings
 
 (define qstr-night-landings-last-30-days
-  "select sum(ifnull(nitelndgs,0)) from logbook where to_days(logbook.date) >= to_days(now()) - 30")
+  (string-append "select sum(" isnull "(nitelndgs,0)) from logbook where " (date-within-last-n-days "logbook.date" 30)))
 
 (define qstr-night-landings-last-90-days
-  "select sum(ifnull(nitelndgs,0)) from logbook where to_days(logbook.date) >= to_days(now()) - 90")
+  (string-append "select sum(" isnull "(nitelndgs,0)) from logbook where " (date-within-last-n-days "logbook.date" 90)))
 
 (define qstr-night-landings-last-180-days
-  "select sum(ifnull(nitelndgs,0)) from logbook where to_days(logbook.date) >= to_days(now()) - 180")
+  (string-append "select sum(" isnull "(nitelndgs,0)) from logbook where " (date-within-last-n-days "logbook.date" 180)))
 
 (define qstr-night-landings-last-365-days
-  "select sum(ifnull(nitelndgs,0)) from logbook where to_days(logbook.date) >= to_days(now()) - 365")
+  (string-append "select sum(" isnull "(nitelndgs,0)) from logbook where " (date-within-last-n-days "logbook.date" 365)))
 
 (define qstr-night-landings
-  "select sum(ifnull(nitelndgs,0)) from logbook")
+  (string-append "select sum(" isnull "(nitelndgs,0)) from logbook"))
 
 (define night-landings-last-30-days
   (first-answer the-db qstr-night-landings-last-30-days))
@@ -138,19 +155,19 @@
   "select sum(act_inst) from logbook")
 
 (define qstr-inst-act-last-30-days
-  "select sum(ifnull(act_inst, 0)) from logbook where to_days(date) >= to_days(now()) - 30")
+  (string-append "select sum(" isnull "(act_inst, 0)) from logbook where " (date-within-last-n-days "logbook.date" 30)))
 
 (define qstr-inst-act-last-90-days
-  "select sum(ifnull(act_inst, 0)) from logbook where to_days(date) >= to_days(now()) - 90")
+  (string-append "select sum(" isnull "(act_inst, 0)) from logbook where " (date-within-last-n-days "logbook.date" 90)))
 
 (define qstr-inst-act-last-180-days
-  "select sum(ifnull(act_inst, 0)) from logbook where to_days(date) >= to_days(now()) - 180")
+  (string-append "select sum(" isnull "(act_inst, 0)) from logbook where " (date-within-last-n-days "logbook.date" 180)))
 
 (define qstr-inst-act-last-365-days
-  "select sum(ifnull(act_inst, 0)) from logbook where to_days(date) >= to_days(now()) - 365")
+  (string-append "select sum(" isnull "(act_inst, 0)) from logbook where " (date-within-last-n-days "logbook.date" 365)))
 
 (define qstr-inst-act-pic
-  "select sum(ifnull(act_inst, 0)) from logbook where act_inst > 0 and ifnull(pic, 0) > ifnull(act_inst, 0)")
+  (string-append "select sum(" isnull "(act_inst, 0)) from logbook where act_inst > 0 and " isnull "(pic, 0) > " isnull "(act_inst, 0)"))
 
 (define inst-act
   (first-answer the-db qstr-inst-act))
@@ -174,16 +191,16 @@
 ;; Instrument Simulated
 
 (define qstr-inst-sim-last-30-days
-  "select sum(ifnull(sim_inst, 0)) from logbook where to_days(date) >= to_days(now()) - 30")
+  (string-append "select sum(" isnull "(sim_inst, 0)) from logbook where " (date-within-last-n-days "logbook.date" 30)))
 
 (define qstr-inst-sim-last-90-days
-  "select sum(ifnull(sim_inst, 0)) from logbook where to_days(date) >= to_days(now()) - 90")
+  (string-append "select sum(" isnull "(sim_inst, 0)) from logbook where " (date-within-last-n-days "logbook.date" 90)))
 
 (define qstr-inst-sim-last-180-days
-  "select sum(ifnull(sim_inst, 0)) from logbook where to_days(date) >= to_days(now()) - 180")
+  (string-append "select sum(" isnull "(sim_inst, 0)) from logbook where " (date-within-last-n-days "logbook.date" 180)))
 
 (define qstr-inst-sim-last-365-days
-  "select sum(ifnull(sim_inst, 0)) from logbook where to_days(date) >= to_days(now()) - 365")
+  (string-append "select sum(" isnull "(sim_inst, 0)) from logbook where " (date-within-last-n-days "logbook.date" 365)))
 
 (define qstr-inst-sim
   "select sum(sim_inst) from logbook")
@@ -207,19 +224,19 @@
 ;; Hours
 
 (define qstr-hours-last-30-days
-  "select sum(ifnull(duration,0)) from logbook where to_days(logbook.date) >= to_days(now()) - 30")
+  (string-append "select sum(" isnull "(duration,0)) from logbook where " (date-within-last-n-days "logbook.date" 30)))
 
 (define qstr-hours-last-90-days
-  "select sum(ifnull(duration,0)) from logbook where to_days(logbook.date) >= to_days(now()) - 90")
+  (string-append "select sum(" isnull "(duration,0)) from logbook where " (date-within-last-n-days "logbook.date" 90)))
 
 (define qstr-hours-last-180-days
-  "select sum(ifnull(duration,0)) from logbook where to_days(logbook.date) >= to_days(now()) - 180")
+  (string-append "select sum(" isnull "(duration,0)) from logbook where " (date-within-last-n-days "logbook.date" 180)))
 
 (define qstr-hours-last-365-days
-  "select sum(ifnull(duration,0)) from logbook where to_days(logbook.date) >= to_days(now()) - 365")
+  (string-append "select sum(" isnull "(duration,0)) from logbook where " (date-within-last-n-days "logbook.date" 365)))
 
 (define qstr-hours
-  "select sum(ifnull(duration,0)) from logbook")
+  (string-append "select sum(" isnull "(duration,0)) from logbook"))
 
 (define hours-last-30-days
   (first-answer the-db qstr-hours-last-30-days))
@@ -242,13 +259,17 @@
 ;;; List Instrument Approaches in the Last Year
 
 (define qstr-approaches-list
-  "select date, inst_app, remarks from logbook where inst_app > 0 and to_days(date) >= to_days(now()) - 365 order by date desc")
+  (string-append "select date, inst_app, remarks from logbook where inst_app > 0 and "
+                 (date-within-last-n-days "date" 365)
+                 " order by date desc"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; List Night Landings in the Last Half Year
 
 (define qstr-night-landings-list
-  "select date, nitelndgs, remarks from logbook where nitelndgs > 0 and to_days(date) >= to_days(now()) - 180 order by date desc")
+  (string-append "select date, nitelndgs, remarks from logbook where nitelndgs > 0 and "
+                 (date-within-last-n-days "date" 180)
+                 " order by date desc"))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -260,7 +281,7 @@
 (struct cap-participation (id bkpgln date msym msn snum ac role) #:transparent)
 
 (define qstr-cap-read-logbook
-  "select bkpgln, date, ifnull(nav,0) as 'nav', ifnull(duration,0) as 'dur', remarks from logbook order by bkpgln")
+  (string-append "select bkpgln, date, " isnull "(nav,0) as 'nav', " isnull "(duration,0) as 'dur', remarks from logbook order by bkpgln"))
 
 (struct caplog (bkpgln date nav dur remarks) #:transparent)
 
@@ -274,7 +295,7 @@
           (fmt-i-02d (sql-date-day d))))
 
 (define (days-since-sql-date d)
-  0)
+  (error "unimplemented: days-since-sql-date"))
 
 (define (item a b)
   (list (string-append a ": " b)))
