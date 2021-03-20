@@ -188,7 +188,7 @@
   (first-answer the-db qstr-inst-act-pic))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Instrument Simulated
+;; Instrument Simulated (Hood)
 
 (define qstr-inst-sim-last-30-days
   (string-append "select sum(" isnull "(sim_inst, 0)) from logbook where " (date-within-last-n-days "logbook.date" 30)))
@@ -219,6 +219,39 @@
 
 (define inst-sim
   (first-answer the-db qstr-inst-sim))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Simulator
+
+(define qstr-simulator-last-30-days
+  (string-append "select sum(" isnull "(simulator, 0)) from logbook where " (date-within-last-n-days "logbook.date" 30)))
+
+(define qstr-simulator-last-90-days
+  (string-append "select sum(" isnull "(simulator, 0)) from logbook where " (date-within-last-n-days "logbook.date" 90)))
+
+(define qstr-simulator-last-180-days
+  (string-append "select sum(" isnull "(simulator, 0)) from logbook where " (date-within-last-n-days "logbook.date" 180)))
+
+(define qstr-simulator-last-365-days
+  (string-append "select sum(" isnull "(simulator, 0)) from logbook where " (date-within-last-n-days "logbook.date" 365)))
+
+(define qstr-simulator
+  "select sum(simulator) from logbook")
+
+(define simulator-last-30-days
+  (first-answer the-db qstr-simulator-last-30-days))
+
+(define simulator-last-90-days
+  (first-answer the-db qstr-simulator-last-90-days))
+
+(define simulator-last-180-days
+  (first-answer the-db qstr-simulator-last-180-days))
+
+(define simulator-last-365-days
+  (first-answer the-db qstr-simulator-last-365-days))
+
+(define simulator
+  (first-answer the-db qstr-simulator))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Hours
@@ -285,6 +318,17 @@
 
 (struct caplog (bkpgln date nav dur remarks) #:transparent)
 
+(define qstr-cap-mission-recency
+  #<<ZZ
+select distinct mp.date, (current_date - mp.date) as days, b.tailnum, mp.msym, ms.description from mission_participation mp
+join logbook b on b.bkpgln = mp.bkpgln 
+join mission_symbols ms on mp.msym = ms.msym and mp.date >= (current_date - interval '1 year')
+order by days
+ZZ
+  )
+
+(struct msnrec (date days tailnum msym description) #:transparent)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Utility
 
@@ -327,6 +371,18 @@
                  (vector-ref row 2)))
          rows)))
 
+(define (get-cap-mission-recency)
+  (let ([rows (query-rows the-db qstr-cap-mission-recency)])
+    (map (λ (row)
+           (msnrec (sql-date->ymd10 (vector-ref row 0))
+                   (vector-ref row 1)
+                   (vector-ref row 2)
+                   (vector-ref row 3)
+                   (vector-ref row 4)))
+         rows)))
+
+(define mission-recency-list (get-cap-mission-recency))
+
 (define approaches-list
   (get-date-count-remarks qstr-approaches-list 180))
 
@@ -341,6 +397,16 @@
            (td ,(fourth info))))
        results-list))
 
+(define (mission-currency-table-rows msnrecs)
+  (map (lambda (r)
+         `(tr
+           (td ,(msnrec-date r))
+           (td ,(number->string (msnrec-days r)))
+           (td ,(msnrec-tailnum r))
+           (td ,(msnrec-msym r))
+           (td ,(msnrec-description r))))
+       msnrecs))
+
 (define approaches-table
   (append `(table (tr (th "Date") (th "#") (th "Instrument Approach Details")))
           (detail-table-rows approaches-list)))
@@ -349,62 +415,74 @@
   (append `(table (tr (th "Date") (th "#") (th "Night Landings Details")))
           (detail-table-rows night-landings-list)))
 
+(define mission-recency-table
+  (append `(table (tr (th "Date") (th "Days") (th "tailnum") (th "msym") (th "One Year Mission Recency")))
+          (mission-currency-table-rows mission-recency-list)))
+
 (define summary-table
   `(table (tr (th) (th "Instrument Approaches")
-                                (th "Landings")
-                                (th "Night Landings")
-                                (th "Act Inst")
-                                (th "Sim Inst")
-                                (th "Hours"))
-                            (tr (td "30 days")
-                                ,(td-int inst-app-last-30-days)
-                                ,(td-int landings-last-30-days)
-                                ,(td-int night-landings-last-30-days)
-                                ,(td-flthrs inst-act-last-30-days)
-                                ,(td-flthrs inst-sim-last-30-days)
-                                ,(td-flthrs hours-last-30-days))
-                            (tr (td "90 days")
-                                ,(td-int inst-app-last-90-days)
-                                ,(td-int-threshhold landings-last-90-days 3)
-                                ,(td-int-threshhold night-landings-last-90-days 3)
-                                ,(td-flthrs inst-act-last-90-days)
-                                ,(td-flthrs inst-sim-last-90-days)
-                                ,(td-flthrs hours-last-90-days))
-                            (tr (td "180 days")
-                                ,(td-int-threshhold inst-app-last-180-days 6)
-                                ,(td-int landings-last-180-days)
-                                ,(td-int night-landings-last-180-days)
-                                ,(td-flthrs inst-act-last-180-days)
-                                ,(td-flthrs inst-sim-last-180-days)
-                                ,(td-flthrs hours-last-180-days))
-                            (tr (td "365 days")
-                                ,(td-int inst-app-last-365-days)
-                                ,(td-int landings-last-365-days)
-                                ,(td-int night-landings-last-365-days)
-                                ,(td-flthrs inst-act-last-365-days)
-                                ,(td-flthrs inst-sim-last-365-days)
-                                ,(td-flthrs hours-last-365-days))
-                            (tr (td "total")
-                                ,(td-int inst-app)
-                                ,(td-int landings)
-                                ,(td-int night-landings)
-                                ,(td-flthrs inst-act)
-                                ,(td-flthrs inst-sim)
-                                ,(td-flthrs adjusted-hours))))
+              (th "Landings")
+              (th "Night Landings")
+              (th "Act Inst")
+              (th "Hood")
+              (th "Simulator")
+              (th "Hours"))
+          (tr (td "30 days")
+              ,(td-int inst-app-last-30-days)
+              ,(td-int landings-last-30-days)
+              ,(td-int night-landings-last-30-days)
+              ,(td-flthrs inst-act-last-30-days)
+              ,(td-flthrs inst-sim-last-30-days)
+              ,(td-flthrs simulator-last-30-days)
+              ,(td-flthrs hours-last-30-days))
+          (tr (td "90 days")
+              ,(td-int inst-app-last-90-days)
+              ,(td-int-threshhold landings-last-90-days 3)
+              ,(td-int-threshhold night-landings-last-90-days 3)
+              ,(td-flthrs inst-act-last-90-days)
+              ,(td-flthrs inst-sim-last-90-days)
+              ,(td-flthrs simulator-last-90-days)
+              ,(td-flthrs hours-last-90-days))
+          (tr (td "180 days")
+              ,(td-int-threshhold inst-app-last-180-days 6)
+              ,(td-int landings-last-180-days)
+              ,(td-int night-landings-last-180-days)
+              ,(td-flthrs inst-act-last-180-days)
+              ,(td-flthrs inst-sim-last-180-days)
+              ,(td-flthrs simulator-last-180-days)
+              ,(td-flthrs hours-last-180-days))
+          (tr (td "365 days")
+              ,(td-int inst-app-last-365-days)
+              ,(td-int landings-last-365-days)
+              ,(td-int night-landings-last-365-days)
+              ,(td-flthrs inst-act-last-365-days)
+              ,(td-flthrs inst-sim-last-365-days)
+              ,(td-flthrs simulator-last-365-days)
+              ,(td-flthrs hours-last-365-days))
+          (tr (td "total")
+              ,(td-int inst-app)
+              ,(td-int landings)
+              ,(td-int night-landings)
+              ,(td-flthrs inst-act)
+              ,(td-flthrs inst-sim)
+              ,(td-flthrs simulator)
+              ,(td-flthrs adjusted-hours))))
 
 (define the-page
   `(html (head (title ,head-title)
-                (link ((rel "stylesheet")
-                       (href ,css-path)
-                       (type "text/css")))
-                (body (div ((class "test"))
-                           (h1 ,(string-append "Pilot Currency -- " pilot-name))
-                           (p ((class "compgen")) ,computer-generated)
-                           ,summary-table
-                           (br)
-                           ,approaches-table
-                           (br)
-                           ,night-landings-table)))))
+               (link ((rel "stylesheet")
+                      (href ,css-path)
+                      (type "text/css")))
+               (body (div ((class "test"))
+                          (h1 ,(string-append "Pilot Currency -- " pilot-name))
+                          (p ((class "compgen")) ,computer-generated)
+                          ,summary-table
+                          (br)
+                          ,approaches-table
+                          (br)
+                          ,night-landings-table
+                          (br)
+                          ,mission-recency-table)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Process Web Request
