@@ -4,6 +4,8 @@
 
 (require web-server/servlet
          web-server/servlet-env
+         (only-in web-server/templates
+                  include-template)
          db
          db/util/datetime
          format-ymd
@@ -487,6 +489,7 @@ ZZ
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Process Web Request
 
+;; request? -> response?
 (define (start req)
   (response/xexpr the-page))
 
