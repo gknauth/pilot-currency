@@ -55,16 +55,20 @@
         [else (error "invalid db-engine")]))
 
 (define qstr-inst-app-last-30-days
-  (string-append "select sum(" isnull "(inst_app,0)) from logbook where " (date-within-last-n-days "logbook.date" 30)))
+  (string-append "select sum(" isnull "(inst_app,0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 30)))
 
 (define qstr-inst-app-last-90-days
-  (string-append "select sum(" isnull "(inst_app,0)) from logbook where " (date-within-last-n-days "logbook.date" 90)))
+  (string-append "select sum(" isnull "(inst_app,0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 90)))
 
 (define qstr-inst-app-last-180-days
-  (string-append "select sum(" isnull "(inst_app,0)) from logbook where " (date-within-last-n-days "logbook.date" 180)))
+  (string-append "select sum(" isnull "(inst_app,0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 180)))
 
 (define qstr-inst-app-last-365-days
-  (string-append "select sum(" isnull "(inst_app,0)) from logbook where " (date-within-last-n-days "logbook.date" 365)))
+  (string-append "select sum(" isnull "(inst_app,0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 365)))
 
 (define qstr-inst-app
   (string-append "select sum(" isnull "(inst_app,0)) from logbook"))
@@ -88,16 +92,20 @@
 ;; Landings
 
 (define qstr-landings-last-30-days
-  (string-append "select sum(" isnull "(landings,0)) from logbook where " (date-within-last-n-days "logbook.date" 30)))
+  (string-append "select sum(" isnull "(landings,0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 30)))
 
 (define qstr-landings-last-90-days
-  (string-append "select sum(" isnull "(landings,0)) from logbook where " (date-within-last-n-days "logbook.date" 90)))
+  (string-append "select sum(" isnull "(landings,0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 90)))
 
 (define qstr-landings-last-180-days
-  (string-append "select sum(" isnull "(landings,0)) from logbook where " (date-within-last-n-days "logbook.date" 180)))
+  (string-append "select sum(" isnull "(landings,0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 180)))
 
 (define qstr-landings-last-365-days
-  (string-append "select sum(" isnull "(landings,0)) from logbook where " (date-within-last-n-days "logbook.date" 365)))
+  (string-append "select sum(" isnull "(landings,0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 365)))
 
 (define qstr-landings
   (string-append "select sum(" isnull "(landings,0)) from logbook"))
@@ -121,16 +129,20 @@
 ;; Night Landings
 
 (define qstr-night-landings-last-30-days
-  (string-append "select sum(" isnull "(nitelndgs,0)) from logbook where " (date-within-last-n-days "logbook.date" 30)))
+  (string-append "select sum(" isnull "(nitelndgs,0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 30)))
 
 (define qstr-night-landings-last-90-days
-  (string-append "select sum(" isnull "(nitelndgs,0)) from logbook where " (date-within-last-n-days "logbook.date" 90)))
+  (string-append "select sum(" isnull "(nitelndgs,0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 90)))
 
 (define qstr-night-landings-last-180-days
-  (string-append "select sum(" isnull "(nitelndgs,0)) from logbook where " (date-within-last-n-days "logbook.date" 180)))
+  (string-append "select sum(" isnull "(nitelndgs,0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 180)))
 
 (define qstr-night-landings-last-365-days
-  (string-append "select sum(" isnull "(nitelndgs,0)) from logbook where " (date-within-last-n-days "logbook.date" 365)))
+  (string-append "select sum(" isnull "(nitelndgs,0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 365)))
 
 (define qstr-night-landings
   (string-append "select sum(" isnull "(nitelndgs,0)) from logbook"))
@@ -157,16 +169,20 @@
   "select sum(act_inst) from logbook")
 
 (define qstr-inst-act-last-30-days
-  (string-append "select sum(" isnull "(act_inst, 0)) from logbook where " (date-within-last-n-days "logbook.date" 30)))
+  (string-append "select sum(" isnull "(act_inst, 0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 30)))
 
 (define qstr-inst-act-last-90-days
-  (string-append "select sum(" isnull "(act_inst, 0)) from logbook where " (date-within-last-n-days "logbook.date" 90)))
+  (string-append "select sum(" isnull "(act_inst, 0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 90)))
 
 (define qstr-inst-act-last-180-days
-  (string-append "select sum(" isnull "(act_inst, 0)) from logbook where " (date-within-last-n-days "logbook.date" 180)))
+  (string-append "select sum(" isnull "(act_inst, 0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 180)))
 
 (define qstr-inst-act-last-365-days
-  (string-append "select sum(" isnull "(act_inst, 0)) from logbook where " (date-within-last-n-days "logbook.date" 365)))
+  (string-append "select sum(" isnull "(act_inst, 0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 365)))
 
 (define qstr-inst-act-pic
   (string-append "select sum(" isnull "(act_inst, 0)) from logbook where act_inst > 0 and " isnull "(pic, 0) > " isnull "(act_inst, 0)"))
@@ -193,16 +209,20 @@
 ;; Instrument Simulated (Hood)
 
 (define qstr-inst-sim-last-30-days
-  (string-append "select sum(" isnull "(sim_inst, 0)) from logbook where " (date-within-last-n-days "logbook.date" 30)))
+  (string-append "select sum(" isnull "(sim_inst, 0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 30)))
 
 (define qstr-inst-sim-last-90-days
-  (string-append "select sum(" isnull "(sim_inst, 0)) from logbook where " (date-within-last-n-days "logbook.date" 90)))
+  (string-append "select sum(" isnull "(sim_inst, 0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 90)))
 
 (define qstr-inst-sim-last-180-days
-  (string-append "select sum(" isnull "(sim_inst, 0)) from logbook where " (date-within-last-n-days "logbook.date" 180)))
+  (string-append "select sum(" isnull "(sim_inst, 0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 180)))
 
 (define qstr-inst-sim-last-365-days
-  (string-append "select sum(" isnull "(sim_inst, 0)) from logbook where " (date-within-last-n-days "logbook.date" 365)))
+  (string-append "select sum(" isnull "(sim_inst, 0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 365)))
 
 (define qstr-inst-sim
   "select sum(sim_inst) from logbook")
@@ -226,16 +246,20 @@
 ;; Simulator
 
 (define qstr-simulator-last-30-days
-  (string-append "select sum(" isnull "(simulator, 0)) from logbook where " (date-within-last-n-days "logbook.date" 30)))
+  (string-append "select sum(" isnull "(simulator, 0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 30)))
 
 (define qstr-simulator-last-90-days
-  (string-append "select sum(" isnull "(simulator, 0)) from logbook where " (date-within-last-n-days "logbook.date" 90)))
+  (string-append "select sum(" isnull "(simulator, 0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 90)))
 
 (define qstr-simulator-last-180-days
-  (string-append "select sum(" isnull "(simulator, 0)) from logbook where " (date-within-last-n-days "logbook.date" 180)))
+  (string-append "select sum(" isnull "(simulator, 0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 180)))
 
 (define qstr-simulator-last-365-days
-  (string-append "select sum(" isnull "(simulator, 0)) from logbook where " (date-within-last-n-days "logbook.date" 365)))
+  (string-append "select sum(" isnull "(simulator, 0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 365)))
 
 (define qstr-simulator
   "select sum(simulator) from logbook")
@@ -259,16 +283,20 @@
 ;; Hours
 
 (define qstr-hours-last-30-days
-  (string-append "select sum(" isnull "(duration,0)) from logbook where " (date-within-last-n-days "logbook.date" 30)))
+  (string-append "select sum(" isnull "(duration,0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 30)))
 
 (define qstr-hours-last-90-days
-  (string-append "select sum(" isnull "(duration,0)) from logbook where " (date-within-last-n-days "logbook.date" 90)))
+  (string-append "select sum(" isnull "(duration,0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 90)))
 
 (define qstr-hours-last-180-days
-  (string-append "select sum(" isnull "(duration,0)) from logbook where " (date-within-last-n-days "logbook.date" 180)))
+  (string-append "select sum(" isnull "(duration,0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 180)))
 
 (define qstr-hours-last-365-days
-  (string-append "select sum(" isnull "(duration,0)) from logbook where " (date-within-last-n-days "logbook.date" 365)))
+  (string-append "select sum(" isnull "(duration,0)) from logbook where "
+                 (date-within-last-n-days "logbook.date" 365)))
 
 (define qstr-hours
   (string-append "select sum(" isnull "(duration,0)) from logbook"))
@@ -287,8 +315,6 @@
 
 (define hours
   (first-answer the-db qstr-hours))
-
-(define adjusted-hours (+ hours 20)) ; add glider hours in different logbook
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; List Instrument Approaches in the Last Year
@@ -330,6 +356,367 @@ ZZ
   )
 
 (struct msnrec (date days tailnum msym description) #:transparent)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; GLIDER
+
+(define qstr-glider-dual-flights
+  "select count(*) from glider_logbook where dual_dh > 0")
+
+(define qstr-glider-dual-flights-last-30-days
+  (string-append "select count(*) from glider_logbook where dual_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 30)))
+
+(define qstr-glider-dual-flights-last-90-days
+  (string-append "select count(*) from glider_logbook where dual_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 90)))
+
+(define qstr-glider-dual-flights-last-180-days
+  (string-append "select count(*) from glider_logbook where dual_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 180)))
+
+(define qstr-glider-dual-flights-last-365-days
+  (string-append "select count(*) from glider_logbook where dual_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 365)))
+
+
+(define qstr-glider-dual-given-flights
+  "select count(*) from glider_logbook where dual_given_dh > 0")
+
+(define qstr-glider-dual-given-flights-last-30-days
+  (string-append "select count(*) from glider_logbook where dual_given_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 30)))
+
+(define qstr-glider-dual-given-flights-last-90-days
+  (string-append "select count(*) from glider_logbook where dual_given_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 90)))
+
+(define qstr-glider-dual-given-flights-last-180-days
+  (string-append "select count(*) from glider_logbook where dual_given_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 180)))
+
+(define qstr-glider-dual-given-flights-last-365-days
+  (string-append "select count(*) from glider_logbook where dual_given_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 365)))
+
+
+(define qstr-glider-dual-given-hours
+  "select sum(dual_given_dh) from glider_logbook")
+
+(define qstr-glider-dual-given-hours-last-30-days
+  (string-append "select sum(" isnull "(dual_given_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 30)))
+
+(define qstr-glider-dual-given-hours-last-90-days
+  (string-append "select sum(" isnull "(dual_given_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 90)))
+
+(define qstr-glider-dual-given-hours-last-180-days
+  (string-append "select sum(" isnull "(dual_given_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 180)))
+
+(define qstr-glider-dual-given-hours-last-365-days
+  (string-append "select sum(" isnull "(dual_given_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 365)))
+
+
+(define qstr-glider-dual-hours
+  "select sum(dual_dh) from glider_logbook")
+
+(define qstr-glider-dual-hours-last-30-days
+  (string-append "select sum(" isnull "(dual_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 30)))
+
+(define qstr-glider-dual-hours-last-90-days
+  (string-append "select sum(" isnull "(dual_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 90)))
+
+(define qstr-glider-dual-hours-last-180-days
+  (string-append "select sum(" isnull "(dual_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 180)))
+
+(define qstr-glider-dual-hours-last-365-days
+  (string-append "select sum(" isnull "(dual_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 365)))
+
+
+(define qstr-glider-flights
+  "select count(*) from glider_logbook where duration_dh > 0")
+
+(define qstr-glider-flights-last-30-days
+  (string-append "select count(*) from glider_logbook where duration_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 30)))
+
+(define qstr-glider-flights-last-90-days
+  (string-append "select count(*) from glider_logbook where duration_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 90)))
+
+(define qstr-glider-flights-last-180-days
+  (string-append "select count(*) from glider_logbook where duration_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 180)))
+
+(define qstr-glider-flights-last-365-days
+  (string-append "select count(*) from glider_logbook where duration_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 365)))
+
+
+(define qstr-glider-hours
+  "select sum(duration_dh) from glider_logbook")
+
+(define qstr-glider-hours-last-30-days
+  (string-append "select sum(" isnull "(duration_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 30)))
+
+(define qstr-glider-hours-last-90-days
+  (string-append "select sum(" isnull "(duration_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 90)))
+
+(define qstr-glider-hours-last-180-days
+  (string-append "select sum(" isnull "(duration_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 180)))
+
+(define qstr-glider-hours-last-365-days
+  (string-append "select sum(" isnull "(duration_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 365)))
+
+
+(define qstr-glider-pic-flights
+  "select count(*) from glider_logbook where pic_dh > 0")
+
+(define qstr-glider-pic-flights-last-30-days
+  (string-append "select count(*) from glider_logbook where pic_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 30)))
+
+(define qstr-glider-pic-flights-last-90-days
+  (string-append "select count(*) from glider_logbook where pic_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 90)))
+
+(define qstr-glider-pic-flights-last-180-days
+  (string-append "select count(*) from glider_logbook where pic_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 180)))
+
+(define qstr-glider-pic-flights-last-365-days
+  (string-append "select count(*) from glider_logbook where pic_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 365)))
+
+
+; pic
+(define qstr-glider-pic-hours
+  "select sum(pic_dh) from glider_logbook")
+
+(define qstr-glider-pic-hours-last-30-days
+  (string-append "select sum(" isnull "(pic_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 30)))
+
+(define qstr-glider-pic-hours-last-90-days
+  (string-append "select sum(" isnull "(pic_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 90)))
+
+(define qstr-glider-pic-hours-last-180-days
+  (string-append "select sum(" isnull "(pic_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 180)))
+
+(define qstr-glider-pic-hours-last-365-days
+  (string-append "select sum(" isnull "(pic_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 365)))
+
+
+; solo
+(define qstr-glider-solo-flights
+  "select count(*) from glider_logbook where solo_dh > 0")
+
+(define qstr-glider-solo-flights-last-30-days
+  (string-append "select count(*) from glider_logbook where solo_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 30)))
+
+(define qstr-glider-solo-flights-last-90-days
+  (string-append "select count(*) from glider_logbook where solo_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 90)))
+
+(define qstr-glider-solo-flights-last-180-days
+  (string-append "select count(*) from glider_logbook where solo_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 180)))
+
+(define qstr-glider-solo-flights-last-365-days
+  (string-append "select count(*) from glider_logbook where solo_dh > 0 and "
+                 (date-within-last-n-days "glider_logbook.date" 365)))
+
+
+; solo
+(define qstr-glider-solo-hours
+  "select sum(solo_dh) from glider_logbook")
+
+(define qstr-glider-solo-hours-last-30-days
+  (string-append "select sum(" isnull "(solo_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 30)))
+
+(define qstr-glider-solo-hours-last-90-days
+  (string-append "select sum(" isnull "(solo_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 90)))
+
+(define qstr-glider-solo-hours-last-180-days
+  (string-append "select sum(" isnull "(solo_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 180)))
+
+(define qstr-glider-solo-hours-last-365-days
+  (string-append "select sum(" isnull "(solo_dh,0)) from glider_logbook where "
+                 (date-within-last-n-days "glider_logbook.date" 365)))
+
+;;;; ----------------------------------------------------------------------
+(define glider-dual-flights
+  (first-answer the-db qstr-glider-dual-flights))
+
+(define glider-dual-flights-last-30-days
+  (first-answer the-db qstr-glider-dual-flights-last-30-days))
+
+(define glider-dual-flights-last-90-days
+  (first-answer the-db qstr-glider-dual-flights-last-90-days))
+
+(define glider-dual-flights-last-180-days
+  (first-answer the-db qstr-glider-dual-flights-last-180-days))
+
+(define glider-dual-flights-last-365-days
+  (first-answer the-db qstr-glider-dual-flights-last-365-days))
+
+
+(define glider-dual-given-flights
+  (first-answer the-db qstr-glider-dual-given-flights))
+
+(define glider-dual-given-flights-last-30-days
+  (first-answer the-db qstr-glider-dual-given-flights-last-30-days))
+
+(define glider-dual-given-flights-last-90-days
+  (first-answer the-db qstr-glider-dual-given-flights-last-90-days))
+
+(define glider-dual-given-flights-last-180-days
+  (first-answer the-db qstr-glider-dual-given-flights-last-180-days))
+
+(define glider-dual-given-flights-last-365-days
+  (first-answer the-db qstr-glider-dual-given-flights-last-365-days))
+
+
+(define glider-dual-given-hours
+  (first-answer the-db qstr-glider-dual-given-hours))
+
+(define glider-dual-given-hours-last-30-days
+  (first-answer the-db qstr-glider-dual-given-hours-last-30-days))
+
+(define glider-dual-given-hours-last-90-days
+  (first-answer the-db qstr-glider-dual-given-hours-last-90-days))
+
+(define glider-dual-given-hours-last-180-days
+  (first-answer the-db qstr-glider-dual-given-hours-last-180-days))
+
+(define glider-dual-given-hours-last-365-days
+  (first-answer the-db qstr-glider-dual-given-hours-last-365-days))
+
+(define glider-dual-hours
+  (first-answer the-db qstr-glider-dual-hours))
+
+(define glider-dual-hours-last-30-days
+  (first-answer the-db qstr-glider-dual-hours-last-30-days))
+
+(define glider-dual-hours-last-90-days
+  (first-answer the-db qstr-glider-dual-hours-last-90-days))
+
+(define glider-dual-hours-last-180-days
+  (first-answer the-db qstr-glider-dual-hours-last-180-days))
+
+(define glider-dual-hours-last-365-days
+  (first-answer the-db qstr-glider-dual-hours-last-365-days))
+
+(define glider-flights
+  (first-answer the-db qstr-glider-flights))
+
+(define glider-flights-last-30-days
+  (first-answer the-db qstr-glider-flights-last-30-days))
+
+(define glider-flights-last-90-days
+  (first-answer the-db qstr-glider-flights-last-90-days))
+
+(define glider-flights-last-180-days
+  (first-answer the-db qstr-glider-flights-last-180-days))
+
+(define glider-flights-last-365-days
+  (first-answer the-db qstr-glider-flights-last-365-days))
+
+
+(define glider-hours
+  (first-answer the-db qstr-glider-hours))
+
+(define glider-hours-last-30-days
+  (first-answer the-db qstr-glider-hours-last-30-days))
+
+(define glider-hours-last-90-days
+  (first-answer the-db qstr-glider-hours-last-90-days))
+
+(define glider-hours-last-180-days
+  (first-answer the-db qstr-glider-hours-last-180-days))
+
+(define glider-hours-last-365-days
+  (first-answer the-db qstr-glider-hours-last-365-days))
+
+(define glider-pic-flights
+  (first-answer the-db qstr-glider-pic-flights))
+
+(define glider-pic-flights-last-30-days
+  (first-answer the-db qstr-glider-pic-flights-last-30-days))
+
+(define glider-pic-flights-last-90-days
+  (first-answer the-db qstr-glider-pic-flights-last-90-days))
+
+(define glider-pic-flights-last-180-days
+  (first-answer the-db qstr-glider-pic-flights-last-180-days))
+
+(define glider-pic-flights-last-365-days
+  (first-answer the-db qstr-glider-pic-flights-last-365-days))
+
+
+(define glider-pic-hours
+  (first-answer the-db qstr-glider-pic-hours))
+
+(define glider-pic-hours-last-30-days
+  (first-answer the-db qstr-glider-pic-hours-last-30-days))
+
+(define glider-pic-hours-last-90-days
+  (first-answer the-db qstr-glider-pic-hours-last-90-days))
+
+(define glider-pic-hours-last-180-days
+  (first-answer the-db qstr-glider-pic-hours-last-180-days))
+
+(define glider-pic-hours-last-365-days
+  (first-answer the-db qstr-glider-pic-hours-last-365-days))
+
+(define glider-solo-flights
+  (first-answer the-db qstr-glider-solo-flights))
+
+(define glider-solo-flights-last-30-days
+  (first-answer the-db qstr-glider-solo-flights-last-30-days))
+
+(define glider-solo-flights-last-90-days
+  (first-answer the-db qstr-glider-solo-flights-last-90-days))
+
+(define glider-solo-flights-last-180-days
+  (first-answer the-db qstr-glider-solo-flights-last-180-days))
+
+(define glider-solo-flights-last-365-days
+  (first-answer the-db qstr-glider-solo-flights-last-365-days))
+
+
+(define glider-solo-hours
+  (first-answer the-db qstr-glider-solo-hours))
+
+(define glider-solo-hours-last-30-days
+  (first-answer the-db qstr-glider-solo-hours-last-30-days))
+
+(define glider-solo-hours-last-90-days
+  (first-answer the-db qstr-glider-solo-hours-last-90-days))
+
+(define glider-solo-hours-last-180-days
+  (first-answer the-db qstr-glider-solo-hours-last-180-days))
+
+(define glider-solo-hours-last-365-days
+  (first-answer the-db qstr-glider-solo-hours-last-365-days))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Utility
@@ -417,6 +804,69 @@ ZZ
   (append `(table (tr (th "Date") (th "#") (th "Night Landings Details")))
           (detail-table-rows night-landings-list)))
 
+(define glider-table
+  `(table (tr (th) (th "Dual Flights") (th "Dual Hours")
+              (th "Solo Flights") (th "Solo Hours")
+              (th "PIC Flights") (th "PIC Hours")
+              (th "Dual Given Flights") (th "Dual Given Hours")
+              (th "Flights") (th "Hours"))
+          (tr (td "30 days")
+              ,(td-int    glider-dual-flights-last-30-days)
+              ,(td-flthrs glider-dual-hours-last-30-days)
+              ,(td-int    glider-solo-flights-last-30-days)
+              ,(td-flthrs glider-solo-hours-last-30-days)
+              ,(td-int    glider-pic-flights-last-30-days)
+              ,(td-flthrs glider-pic-hours-last-30-days)
+              ,(td-int    glider-dual-given-flights-last-30-days)
+              ,(td-flthrs glider-dual-given-hours-last-30-days)
+              ,(td-int    glider-flights-last-30-days)
+              ,(td-flthrs glider-hours-last-30-days))
+          (tr (td "90 days")
+              ,(td-int    glider-dual-flights-last-90-days)
+              ,(td-flthrs glider-dual-hours-last-90-days)
+              ,(td-int    glider-solo-flights-last-90-days)
+              ,(td-flthrs glider-solo-hours-last-90-days)
+              ,(td-int    glider-pic-flights-last-90-days)
+              ,(td-flthrs glider-pic-hours-last-90-days)
+              ,(td-int    glider-dual-given-flights-last-90-days)
+              ,(td-flthrs glider-dual-given-hours-last-90-days)
+              ,(td-int    glider-flights-last-90-days)
+              ,(td-flthrs glider-hours-last-90-days))
+          (tr (td "180 days")
+              ,(td-int    glider-dual-flights-last-180-days)
+              ,(td-flthrs glider-dual-hours-last-180-days)
+              ,(td-int    glider-solo-flights-last-180-days)
+              ,(td-flthrs glider-solo-hours-last-180-days)
+              ,(td-int    glider-pic-flights-last-180-days)
+              ,(td-flthrs glider-pic-hours-last-180-days)
+              ,(td-int    glider-dual-given-flights-last-180-days)
+              ,(td-flthrs glider-dual-given-hours-last-180-days)
+              ,(td-int    glider-flights-last-180-days)
+              ,(td-flthrs glider-hours-last-180-days))
+          (tr (td "365 days")
+              ,(td-int    glider-dual-flights-last-365-days)
+              ,(td-flthrs glider-dual-hours-last-365-days)
+              ,(td-int    glider-solo-flights-last-365-days)
+              ,(td-flthrs glider-solo-hours-last-365-days)
+              ,(td-int    glider-pic-flights-last-365-days)
+              ,(td-flthrs glider-pic-hours-last-365-days)
+              ,(td-int    glider-dual-given-flights-last-365-days)
+              ,(td-flthrs glider-dual-given-hours-last-365-days)
+              ,(td-int    glider-flights-last-365-days)
+              ,(td-flthrs glider-hours-last-365-days))
+          (tr (td "total")
+              ,(td-int    glider-dual-flights)
+              ,(td-flthrs glider-dual-hours)
+              ,(td-int    glider-solo-flights)
+              ,(td-flthrs glider-solo-hours)
+              ,(td-int    glider-pic-flights)
+              ,(td-flthrs glider-pic-hours)
+              ,(td-int    glider-dual-given-flights)
+              ,(td-flthrs glider-dual-given-hours)
+              ,(td-int    glider-flights)
+              ,(td-flthrs glider-hours))))
+
+
 (define mission-recency-table
   (append `(table (tr (th "Date") (th "Days") (th "tailnum") (th "msym") (th "One Year Mission Recency")))
           (mission-currency-table-rows mission-recency-list)))
@@ -468,7 +918,7 @@ ZZ
               ,(td-flthrs inst-act)
               ,(td-flthrs inst-sim)
               ,(td-flthrs simulator)
-              ,(td-flthrs adjusted-hours))))
+              ,(td-flthrs hours))))
 
 (define the-page
   `(html (head (title ,head-title)
@@ -478,12 +928,15 @@ ZZ
                (body (div ((class "test"))
                           (h1 ,(string-append "Pilot Currency -- " pilot-name))
                           (p ((class "compgen")) ,computer-generated)
+                          (h2 "Powered")
                           ,summary-table
                           (br)
                           ,approaches-table
                           (br)
                           ,night-landings-table
-                          (br)
+                          (h2 "Glider")
+                          ,glider-table
+                          (h2 "CAP Mission Recency")
                           ,mission-recency-table)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
