@@ -826,7 +826,7 @@ ZZ
               ,(td-flthrs glider-dual-hours-last-90-days)
               ,(td-int    glider-solo-flights-last-90-days)
               ,(td-flthrs glider-solo-hours-last-90-days)
-              ,(td-int    glider-pic-flights-last-90-days)
+              ,(td-int-threshhold glider-pic-flights-last-90-days 3)
               ,(td-flthrs glider-pic-hours-last-90-days)
               ,(td-int    glider-dual-given-flights-last-90-days)
               ,(td-flthrs glider-dual-given-hours-last-90-days)
