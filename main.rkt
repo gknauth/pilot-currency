@@ -562,7 +562,41 @@ ZZ
   (string-append "select sum(" isnull "(solo_dh,0)) from glider_logbook where "
                  (date-within-last-n-days "glider_logbook.date" 365)))
 
+(define qstr-glider-tows-last-30-days
+  (string-append "select sum(tows) from tow_pilot tp\n"
+                 "join logbook lb on tp.bkpgln=lb.bkpgln\n"
+                 "where lb.date >= (current_date - interval '30 DAYS')"))
+
+(define qstr-glider-tows-last-60-days
+  (string-append "select sum(tows) from tow_pilot tp\n"
+                 "join logbook lb on tp.bkpgln=lb.bkpgln\n"
+                 "where lb.date >= (current_date - interval '60 DAYS')"))
+    
+(define qstr-glider-tows-last-90-days
+  (string-append "select sum(tows) from tow_pilot tp\n"
+                 "join logbook lb on tp.bkpgln=lb.bkpgln\n"
+                 "where lb.date >= (current_date - interval '90 DAYS')"))
+      
+(define qstr-glider-tows-last-180-days
+  (string-append "select sum(tows) from tow_pilot tp\n"
+                 "join logbook lb on tp.bkpgln=lb.bkpgln\n"
+                 "where lb.date >= (current_date - interval '180 DAYS')"))
+        
+(define qstr-glider-tows-last-1-year
+  (string-append "select sum(tows) from tow_pilot tp\n"
+                 "join logbook lb on tp.bkpgln=lb.bkpgln\n"
+                 "where lb.date >= (current_date - interval '1 YEAR')"))
+          
+(define qstr-glider-tows-last-2-years
+  (string-append "select sum(tows) from tow_pilot tp\n"
+                 "join logbook lb on tp.bkpgln=lb.bkpgln\n"
+                 "where lb.date >= (current_date - interval '2 YEARS')"))
+            
+(define qstr-glider-tows-total
+  "select sum(tows) from tow_pilot")
+
 ;;;; ----------------------------------------------------------------------
+
 (define glider-dual-flights
   (first-answer the-db qstr-glider-dual-flights))
 
@@ -719,6 +753,30 @@ ZZ
   (first-answer the-db qstr-glider-solo-hours-last-365-days))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; TOW PILOT
+
+(define glider-tows-last-30-days
+  (first-answer the-db qstr-glider-tows-last-30-days))
+  
+(define glider-tows-last-60-days
+  (first-answer the-db qstr-glider-tows-last-60-days))
+    
+(define glider-tows-last-90-days
+  (first-answer the-db qstr-glider-tows-last-90-days))
+      
+(define glider-tows-last-180-days
+  (first-answer the-db qstr-glider-tows-last-180-days))
+        
+(define glider-tows-last-1-year
+  (first-answer the-db qstr-glider-tows-last-1-year))
+          
+(define glider-tows-last-2-years
+  (first-answer the-db qstr-glider-tows-last-2-years))
+            
+(define glider-tows-total
+  (first-answer the-db qstr-glider-tows-total))
+              
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Utility
 
 (define (sql-date->ymd10 d)
@@ -866,6 +924,20 @@ ZZ
               ,(td-int    glider-flights)
               ,(td-flthrs glider-hours))))
 
+(define tow-table
+  `(table (tr (th "30 Days")
+              (th "60 Days")
+              (th "90 Days") (th "180 Days")
+              (th "1 Year") (th "2 Years") (th "Total"))
+          (tr ,(td-int glider-tows-last-30-days)
+              ,(td-int glider-tows-last-60-days)
+              ,(td-int glider-tows-last-90-days)
+              ,(td-int glider-tows-last-180-days)
+              ,(td-int glider-tows-last-1-year)
+              ,(td-int glider-tows-last-2-years)
+              ,(td-int glider-tows-total)
+              )
+          ))
 
 (define mission-recency-table
   (append `(table (tr (th "Date") (th "Days") (th "tailnum") (th "msym") (th "One Year Mission Recency")))
@@ -936,6 +1008,8 @@ ZZ
                           ,night-landings-table
                           (h2 "Glider")
                           ,glider-table
+                          (h2 "Tows")
+                          ,tow-table
                           (h2 "CAP Mission Recency")
                           ,mission-recency-table)))))
 
