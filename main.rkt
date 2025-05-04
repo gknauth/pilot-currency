@@ -8,6 +8,7 @@
                   include-template)
          db
          db/util/datetime
+         racket/date ; just to get the time for date generated message
          format-ymd
          format-numbers
          (file "~/.flying-dbaccess.rkt")
@@ -34,8 +35,15 @@
          [x (vector-ref (first rows) 0)])
     (if (sql-null? x) 0 x)))
 
+(define (local-time)
+  (let* ([a (current-date)] [h (date-hour a)] [m (date-minute a)] [s (date-second a)])
+    (format "~a:~a:~a" (fmt-i-02d h) (fmt-i-02d m) (fmt-i-02d s))))
+
 (define computer-generated
-  (string-append "computer generated as of " (ymd8->ymd10 today)))
+  (string-append "computer generated as of "
+                 (ymd8->ymd10 today)
+                 " "
+                 (local-time)))
 
 (define isnull
   (cond [(eq? db-engine 'mysql) "ifnull"]
@@ -777,6 +785,69 @@ ZZ
   (first-answer the-db qstr-glider-tows-total))
               
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; IACRA
+
+(define qstr-iacra-total-time-airplanes
+  "select sum(duration) from logbook where duration > 0")
+(define iacra-total-time-airplanes
+  (first-answer the-db qstr-iacra-total-time-airplanes))
+
+(define qstr-airplanes-instruction-received
+  "select sum(dualrecd) from logbook where dualrecd > 0")
+(define airplanes-instruction-received
+  (first-answer the-db qstr-airplanes-instruction-received))
+
+(define qstr-airplanes-solo
+  "select sum(pic) from logbook where pic > 0 and sob = 1")
+(define airplanes-solo
+  (first-answer the-db qstr-airplanes-solo))
+
+(define qstr-airplanes-pic
+  "select sum(pic) from logbook where pic > 0")
+(define airplanes-pic
+  (first-answer the-db qstr-airplanes-pic))
+
+(define qstr-airplanes-xc-dual
+  "select sum(xc) from logbook where dualrecd > 0")
+(define airplanes-xc-dual
+  (first-answer the-db qstr-airplanes-xc-dual))
+
+(define qstr-airplanes-xc-solo
+  "select sum(xc) from logbook where pic > 0 and sob = 1")
+(define airplanes-xc-solo
+  (first-answer the-db qstr-airplanes-xc-solo))
+
+(define qstr-airplanes-xc-pic
+  "select sum(xc) from logbook where pic > 0")
+(define airplanes-xc-pic
+  (first-answer the-db qstr-airplanes-xc-pic))
+
+(define qstr-airplanes-instrument
+  "select sum(act_inst) + sum(sim_inst) from logbook where duration is not null")
+(define airplanes-instrument
+  (first-answer the-db qstr-airplanes-instrument))
+
+(define qstr-airplanes-night-dual
+  "select sum(night) from logbook where night > 0 and dualrecd is not null")
+(define airplanes-night-dual
+  (first-answer the-db qstr-airplanes-night-dual))
+
+(define qstr-airplanes-night-takeoff-landing
+  "select sum(nitelndgs) from logbook")
+(define airplanes-night-takeoff-landing
+  (first-answer the-db qstr-airplanes-night-takeoff-landing))
+
+(define qstr-airplanes-night-pic
+  "select sum(night) from logbook where pic is not null")
+(define airplanes-night-pic
+  (first-answer the-db qstr-airplanes-night-pic))
+
+(define qstr-airplanes-night-takeoff-landing-pic
+  "select sum(nitelndgs) from logbook")
+(define airplanes-night-takeoff-landing-pic
+  (first-answer the-db qstr-airplanes-night-takeoff-landing-pic))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Utility
 
 (define (sql-date->ymd10 d)
@@ -799,6 +870,12 @@ ZZ
 
 (define (td-int-threshhold n threshhold)
   (list 'td `((class ,(if (< n threshhold) "redint" "greenint"))) (number->string n)))
+
+(define (table-class-n class n body)
+  (list 'table `((class ,class) body)))
+
+(define (table-noborder body)
+  (table-class-n "noborder" body))
 
 (define (td-class-n class n decimals)
   (list 'td `((class ,class)) (format-float n decimals)))
@@ -855,11 +932,11 @@ ZZ
        msnrecs))
 
 (define approaches-table
-  (append `(table (tr (th "Date") (th "#") (th "Instrument Approach Details")))
+  (append `(table (tr (th "Date") (th "#") (th "Instrument Approach Details for Currency")))
           (detail-table-rows approaches-list)))
 
 (define night-landings-table
-  (append `(table (tr (th "Date") (th "#") (th "Night Landings Details")))
+  (append `(table (tr (th "Date") (th "#") (th "Night Landings Details for Currency")))
           (detail-table-rows night-landings-list)))
 
 (define glider-table
@@ -943,14 +1020,77 @@ ZZ
   (append `(table (tr (th "Date") (th "Days") (th "tailnum") (th "msym") (th "One Year Mission Recency")))
           (mission-currency-table-rows mission-recency-list)))
 
-(define summary-table
+(define (iacra-table-rows)
+  (list `(tr
+            (td "Airplanes")
+            ,(td-flthrs iacra-total-time-airplanes)
+            ,(td-flthrs airplanes-instruction-received)
+            ,(td-flthrs airplanes-solo)
+            ,(td-flthrs airplanes-pic)
+            ,(td-flthrs airplanes-xc-dual)
+            ,(td-flthrs airplanes-xc-solo)
+            ,(td-flthrs airplanes-xc-pic)
+            ,(td-flthrs airplanes-instrument)
+            ,(td-flthrs airplanes-night-dual)
+            ,(td-int airplanes-night-takeoff-landing)
+            ,(td-flthrs airplanes-night-pic)
+            ,(td-int airplanes-night-takeoff-landing-pic))
+        `(tr
+            (td "Gliders")
+            ,(td-flthrs 0)
+            ,(td-flthrs 0)
+            ,(td-flthrs 0)
+            ,(td-flthrs 0)
+            ,(td-flthrs 0)
+            ,(td-flthrs 0)
+            ,(td-flthrs 0)
+            ,(td-flthrs 0)
+            ,(td-flthrs 0)
+            ,(td-flthrs 0)
+            ,(td-flthrs 0)
+            ,(td-flthrs 0))
+        `(tr
+            (td "ATD")
+            ,(td-flthrs 0)
+            ,(td-flthrs 0)
+            (td)
+            (td)
+            (td)
+            (td)
+            (td)
+            (td)
+            (td)
+            (td)
+            (td)
+            (td))))
+
+(define iacra-table
+  (append `(table (tr
+                   (th "")
+                   (th "Total")
+                   (th "Instruction" (br) "Received")
+                   (th "Solo")
+                   (th "PIC")
+                   (th "Cross Country" (br) "Instruction" (br) "Received")
+                   (th "Cross Country" (br) "Solo")
+                   (th "Cross Country" (br) "PIC")
+                   (th "Instrument")
+                   (th "Night" (br) "Instruction" (br) "Received")
+                   (th "Night" (br) "Takee-Off/" (br) "Landing")
+                   (th "Night" (br) "PIC")
+                   (th "Night" (br) "Take-" (br) "Off/Landing" (br) "PIC")
+                   ))
+          (iacra-table-rows)
+          ))
+
+(define power-summary-table
   `(table (tr (th) (th "Instrument Approaches")
               (th "Landings")
               (th "Night Landings")
               (th "Act Inst")
               (th "Hood")
               (th "Simulator")
-              (th "Hours"))
+              (th "Powered" (br) "Hours"))
           (tr (td "30 days")
               ,(td-int inst-app-last-30-days)
               ,(td-int landings-last-30-days)
@@ -992,26 +1132,50 @@ ZZ
               ,(td-flthrs simulator)
               ,(td-flthrs hours))))
 
+(define glider-summary-table
+  `(table (tr (th "Glider" (br) "Hours") )
+          (tr ,(td-flthrs glider-hours-last-30-days))
+          (tr ,(td-flthrs glider-hours-last-90-days))
+          (tr ,(td-flthrs glider-hours-last-180-days))
+          (tr ,(td-flthrs glider-hours-last-365-days))
+          (tr ,(td-flthrs glider-hours))))
+
+(define total-summary-table
+  `(table (tr (th "Powered" (br) "+ Glider") )
+          (tr ,(td-flthrs (+ hours-last-30-days glider-hours-last-30-days)))
+          (tr ,(td-flthrs (+ hours-last-90-days glider-hours-last-90-days)))
+          (tr ,(td-flthrs (+ hours-last-180-days glider-hours-last-180-days)))
+          (tr ,(td-flthrs (+ hours-last-365-days glider-hours-last-365-days)))
+          (tr ,(td-flthrs (+ hours glider-hours)))))
+
+(define power-and-glider-summary-table
+  `(table (tr (td ,power-summary-table)
+                       (td ,glider-summary-table)
+                       (td ,total-summary-table))))
+
 (define the-page
   `(html (head (title ,head-title)
                (link ((rel "stylesheet")
                       (href ,css-path)
-                      (type "text/css")))
-               (body (div ((class "test"))
+                      (type "text/css"))))
+         (body (div ((class "test"))
                           (h1 ,(string-append "Pilot Currency -- " pilot-name))
                           (p ((class "compgen")) ,computer-generated)
-                          (h2 "Powered")
-                          ,summary-table
+                          (h2 "Summary Powered & Glider")
+                          ;,power-summary-table
+                          ,power-and-glider-summary-table
                           (br)
                           ,approaches-table
                           (br)
                           ,night-landings-table
-                          (h2 "Glider")
+                          (h2 "Glider Currency")
                           ,glider-table
-                          (h2 "Tows")
+                          (h2 "Tow Pilot Currency")
                           ,tow-table
                           (h2 "CAP Mission Recency")
-                          ,mission-recency-table)))))
+                          ,mission-recency-table
+                          (h2 "Record of Pilot Time (for IACRA)")
+                          ,iacra-table))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Process Web Request
@@ -1043,7 +1207,7 @@ ZZ
 ;; If you would prefer to use a different license, replace LICENSE.txt with the
 ;; desired license.
 ;;
-;; Some users like to add a `private/` directory, place auxiliary files there,
+;; Some users like to add a `private/` directory, place auxiliar files there,
 ;; and require them in `main.rkt`.
 ;;
 ;; See the current version of the racket style guide here:
