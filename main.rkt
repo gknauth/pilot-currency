@@ -787,65 +787,95 @@ ZZ
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; IACRA
 
-(define qstr-iacra-total-time-airplanes
+(define qstr-iacra-airplanes-total-time
   "select sum(duration) from logbook where duration > 0")
-(define iacra-total-time-airplanes
-  (first-answer the-db qstr-iacra-total-time-airplanes))
+(define iacra-airplanes-total-time
+  (first-answer the-db qstr-iacra-airplanes-total-time))
 
-(define qstr-airplanes-instruction-received
+(define qstr-iacra-airplanes-instruction-received
   "select sum(dualrecd) from logbook where dualrecd > 0")
-(define airplanes-instruction-received
-  (first-answer the-db qstr-airplanes-instruction-received))
+(define iacra-airplanes-instruction-received
+  (first-answer the-db qstr-iacra-airplanes-instruction-received))
 
-(define qstr-airplanes-solo
+(define qstr-iacra-airplanes-solo
   "select sum(pic) from logbook where pic > 0 and sob = 1")
-(define airplanes-solo
-  (first-answer the-db qstr-airplanes-solo))
+(define iacra-airplanes-solo
+  (first-answer the-db qstr-iacra-airplanes-solo))
 
-(define qstr-airplanes-pic
+(define qstr-iacra-airplanes-pic
   "select sum(pic) from logbook where pic > 0")
-(define airplanes-pic
-  (first-answer the-db qstr-airplanes-pic))
+(define iacra-airplanes-pic
+  (first-answer the-db qstr-iacra-airplanes-pic))
 
-(define qstr-airplanes-xc-dual
+(define qstr-iacra-airplanes-xc-dual
   "select sum(xc) from logbook where dualrecd > 0")
-(define airplanes-xc-dual
-  (first-answer the-db qstr-airplanes-xc-dual))
+(define iacra-airplanes-xc-dual
+  (first-answer the-db qstr-iacra-airplanes-xc-dual))
 
-(define qstr-airplanes-xc-solo
+(define qstr-iacra-airplanes-xc-solo
   "select sum(xc) from logbook where pic > 0 and sob = 1")
-(define airplanes-xc-solo
-  (first-answer the-db qstr-airplanes-xc-solo))
+(define iacra-airplanes-xc-solo
+  (first-answer the-db qstr-iacra-airplanes-xc-solo))
 
-(define qstr-airplanes-xc-pic
+(define qstr-iacra-airplanes-xc-pic
   "select sum(xc) from logbook where pic > 0")
-(define airplanes-xc-pic
-  (first-answer the-db qstr-airplanes-xc-pic))
+(define iacra-airplanes-xc-pic
+  (first-answer the-db qstr-iacra-airplanes-xc-pic))
 
-(define qstr-airplanes-instrument
+(define qstr-iacra-airplanes-instrument
   "select sum(act_inst) + sum(sim_inst) from logbook where duration is not null")
-(define airplanes-instrument
-  (first-answer the-db qstr-airplanes-instrument))
+(define iacra-airplanes-instrument
+  (first-answer the-db qstr-iacra-airplanes-instrument))
 
-(define qstr-airplanes-night-dual
+(define qstr-iacra-airplanes-night-dual
   "select sum(night) from logbook where night > 0 and dualrecd is not null")
-(define airplanes-night-dual
-  (first-answer the-db qstr-airplanes-night-dual))
+(define iacra-airplanes-night-dual
+  (first-answer the-db qstr-iacra-airplanes-night-dual))
 
-(define qstr-airplanes-night-takeoff-landing
+(define qstr-iacra-airplanes-night-takeoff-landing
   "select sum(nitelndgs) from logbook")
-(define airplanes-night-takeoff-landing
-  (first-answer the-db qstr-airplanes-night-takeoff-landing))
+(define iacra-airplanes-night-takeoff-landing
+  (first-answer the-db qstr-iacra-airplanes-night-takeoff-landing))
 
-(define qstr-airplanes-night-pic
+(define qstr-iacra-airplanes-night-pic
   "select sum(night) from logbook where pic is not null")
-(define airplanes-night-pic
-  (first-answer the-db qstr-airplanes-night-pic))
+(define iacra-airplanes-night-pic
+  (first-answer the-db qstr-iacra-airplanes-night-pic))
 
-(define qstr-airplanes-night-takeoff-landing-pic
-  "select sum(nitelndgs) from logbook")
-(define airplanes-night-takeoff-landing-pic
-  (first-answer the-db qstr-airplanes-night-takeoff-landing-pic))
+(define qstr-iacra-airplanes-night-takeoff-landing-pic
+  "select sum(nitelndgs) from logbook where pic is not null")
+(define iacra-airplanes-night-takeoff-landing-pic
+  (first-answer the-db qstr-iacra-airplanes-night-takeoff-landing-pic))
+
+(define qstr-iacra-glider-total-time
+  "select sum(duration_dh) from glider_logbook where duration_dh > 0")
+(define iacra-glider-total-time
+  (first-answer the-db qstr-iacra-glider-total-time))
+
+(define qstr-iacra-glider-instruction-received
+  "select sum(dual_dh) from glider_logbook where dual_dh > 0")
+(define iacra-glider-instruction-received
+  (first-answer the-db qstr-iacra-glider-instruction-received))
+
+(define qstr-iacra-glider-solo
+  "select sum(solo_dh) from glider_logbook where solo_dh > 0")
+(define iacra-glider-solo
+  (first-answer the-db qstr-iacra-glider-solo))
+
+(define qstr-iacra-glider-pic
+  "select sum(pic_dh) from glider_logbook where pic_dh > 0")
+(define iacra-glider-pic
+  (first-answer the-db qstr-iacra-glider-pic))
+
+(define qstr-iacra-atd-total-time
+  "select sum(simulator) from logbook where simulator > 0")
+(define iacra-atd-total-time
+  (first-answer the-db qstr-atd-X))
+
+(define qstr-iacra-atd-instruction-received
+  "select sum(dualrecd) from logbook where dualrecd > 0 and simulator > 0")
+(define iacra-atd-instruction-received
+  (first-answer the-db qstr-atd-instruction-received))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Utility
@@ -1023,42 +1053,42 @@ ZZ
 (define (iacra-table-rows)
   (list `(tr
             (td "Airplanes")
-            ,(td-flthrs iacra-total-time-airplanes)
-            ,(td-flthrs airplanes-instruction-received)
-            ,(td-flthrs airplanes-solo)
-            ,(td-flthrs airplanes-pic)
-            ,(td-flthrs airplanes-xc-dual)
-            ,(td-flthrs airplanes-xc-solo)
-            ,(td-flthrs airplanes-xc-pic)
-            ,(td-flthrs airplanes-instrument)
-            ,(td-flthrs airplanes-night-dual)
-            ,(td-int airplanes-night-takeoff-landing)
-            ,(td-flthrs airplanes-night-pic)
-            ,(td-int airplanes-night-takeoff-landing-pic))
+            ,(td-flthrs iacra-airplanes-total-time)
+            ,(td-flthrs iacra-airplanes-instruction-received)
+            ,(td-flthrs iacra-airplanes-solo)
+            ,(td-flthrs iacra-airplanes-pic)
+            ,(td-flthrs iacra-airplanes-xc-dual)
+            ,(td-flthrs iacra-airplanes-xc-solo)
+            ,(td-flthrs iacra-airplanes-xc-pic)
+            ,(td-flthrs iacra-airplanes-instrument)
+            ,(td-flthrs iacra-airplanes-night-dual)
+            ,(td-int iacra-airplanes-night-takeoff-landing)
+            ,(td-flthrs iacra-airplanes-night-pic)
+            ,(td-int iacra-airplanes-night-takeoff-landing-pic))
         `(tr
             (td "Gliders")
+            ,(td-flthrs iacra-glider-total-time)
+            ,(td-flthrs iacra-glider-instruction-received)
+            ,(td-flthrs iacra-glider-solo)
+            ,(td-flthrs iacra-glider-pic)
             ,(td-flthrs 0)
             ,(td-flthrs 0)
             ,(td-flthrs 0)
             ,(td-flthrs 0)
-            ,(td-flthrs 0)
-            ,(td-flthrs 0)
-            ,(td-flthrs 0)
-            ,(td-flthrs 0)
-            ,(td-flthrs 0)
-            ,(td-flthrs 0)
-            ,(td-flthrs 0)
-            ,(td-flthrs 0))
+            (td)
+            (td)
+            (td)
+            (td))
         `(tr
             (td "ATD")
+            ,(td-flthrs iacra-atd-total-time)
+            ,(td-flthrs iacra-atd-instruction-received)
+            (td)
+            (td)
+            (td)
+            (td)
+            (td)
             ,(td-flthrs 0)
-            ,(td-flthrs 0)
-            (td)
-            (td)
-            (td)
-            (td)
-            (td)
-            (td)
             (td)
             (td)
             (td)
