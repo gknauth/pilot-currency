@@ -95,5 +95,6 @@ td.green { background-color: #bbff22}
 td.red { background-color: #ff9999}
 td.redint   { font-family: arial; color: black; text-align: right; background-color: #ff9999; }
 td.greenint { font-family: arial; color: black; text-align: right; background-color: #bbff22; }
+td.blockout { background: #555555; }
 
 .compgen { font-style: italic; font-size: 80% }

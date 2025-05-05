@@ -870,12 +870,12 @@ ZZ
 (define qstr-iacra-atd-total-time
   "select sum(simulator) from logbook where simulator > 0")
 (define iacra-atd-total-time
-  (first-answer the-db qstr-atd-X))
+  (first-answer the-db qstr-iacra-atd-total-time))
 
 (define qstr-iacra-atd-instruction-received
   "select sum(dualrecd) from logbook where dualrecd > 0 and simulator > 0")
 (define iacra-atd-instruction-received
-  (first-answer the-db qstr-atd-instruction-received))
+  (first-answer the-db qstr-iacra-atd-instruction-received))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Utility
@@ -900,6 +900,9 @@ ZZ
 
 (define (td-int-threshhold n threshhold)
   (list 'td `((class ,(if (< n threshhold) "redint" "greenint"))) (number->string n)))
+
+(define (td-blockout)
+  (list 'td '((class "blockout"))))
 
 (define (table-class-n class n body)
   (list 'table `((class ,class) body)))
@@ -1075,24 +1078,24 @@ ZZ
             ,(td-flthrs 0)
             ,(td-flthrs 0)
             ,(td-flthrs 0)
-            (td)
-            (td)
-            (td)
-            (td))
+            ,(td-blockout)
+            ,(td-blockout)
+            ,(td-blockout)
+            ,(td-blockout))
         `(tr
             (td "ATD")
             ,(td-flthrs iacra-atd-total-time)
             ,(td-flthrs iacra-atd-instruction-received)
-            (td)
-            (td)
-            (td)
-            (td)
-            (td)
+            ,(td-blockout)
+            ,(td-blockout)
+            ,(td-blockout)
+            ,(td-blockout)
+            ,(td-blockout)
             ,(td-flthrs 0)
-            (td)
-            (td)
-            (td)
-            (td))))
+            ,(td-blockout)
+            ,(td-blockout)
+            ,(td-blockout)
+            ,(td-blockout))))
 
 (define iacra-table
   (append `(table (tr
