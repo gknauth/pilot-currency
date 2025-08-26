@@ -358,7 +358,7 @@
   #<<ZZ
 select distinct mp.date, (current_date - mp.date) as days, b.tailnum, mp.msym, ms.description from mission_participation mp
 join logbook b on b.bkpgln = mp.bkpgln 
-join mission_symbols ms on mp.msym = ms.msym and mp.date >= (current_date - interval '1 year')
+join mission_symbols ms on mp.msym = ms.msym and mp.date >= (current_date - interval '1 year') and ms.version='2025-08-20'
 order by days
 ZZ
   )
